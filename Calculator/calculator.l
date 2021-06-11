@@ -2,8 +2,7 @@
 
 %{
 #include <stdlib.h>
-//#include <stdint.h>
-//#include "FlexLexer.h"
+#include "expr_list.h"
 #include "calculator.tab.h"
 #define YY_DECL extern "C" int yylex()
 void yyerror(const char*);

@@ -3,7 +3,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct ExprList ExprList;
+typedef struct ExprList {
+	size_t capacity;
+	size_t size;
+	float* data;
+} ExprList;
 
 ExprList* expr_list_create(int capacity);
 

@@ -1,17 +1,19 @@
 #include "expr_list.h"
 
-typedef struct ExprList {
-	size_t capacity;
-	size_t size;
-	float* data;
-} ExprList;
+//typedef struct ExprList {
+//	size_t capacity;
+//	size_t size;
+//	float* data;
+//} ExprList;
 
 /**
  * @brief Create a new expression list
- * @param capacity: maximum number of expressions the list can hold
+ * @param capacity: maximum number of expressions the list can hold (>0)
  * @retval ExprList* pointing to created expression list
  */
 ExprList* expr_list_create(int capacity) {
+	// Ensure capacity is now below 1
+	if (capacity < 1) capacity = 1;
 	// Allocate mem for list, check successful
 	ExprList* list = (ExprList*)malloc(sizeof(ExprList));
 	if (!list) {
