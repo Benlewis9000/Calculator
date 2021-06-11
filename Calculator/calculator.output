@@ -2,33 +2,34 @@ Grammar
 
     0 $accept: program $end
 
-    1 program: stmt_list '\n'
-    2        | program stmt_list '\n'
+    1 program: expr_list '\n'
+    2        | program expr_list '\n'
 
-    3 stmt_list: expr ';'
-    4          | stmt_list expr ';'
+    3 expr_list: expr ';'
+    4          | expr_list expr ';'
     5          | error ';'
-    6          | stmt_list error ';'
+    6          | expr_list error ';'
 
     7 expr: INTEGER
     8     | FLOAT
-    9     | expr '-' expr
-   10     | expr '+' expr
-   11     | expr '*' expr
-   12     | expr '/' expr
-   13     | '(' expr ')'
+    9     | '-' expr
+   10     | expr '-' expr
+   11     | expr '+' expr
+   12     | expr '*' expr
+   13     | expr '/' expr
+   14     | '(' expr ')'
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     '\n' (10) 1 2
-    '(' (40) 13
-    ')' (41) 13
-    '*' (42) 11
-    '+' (43) 10
-    '-' (45) 9
-    '/' (47) 12
+    '(' (40) 14
+    ')' (41) 14
+    '*' (42) 12
+    '+' (43) 11
+    '-' (45) 9 10
+    '/' (47) 13
     ';' (59) 3 4 5 6
     error (256) 5 6
     INTEGER <ival> (258) 7
@@ -42,12 +43,12 @@ Nonterminals, with rules where they appear
     program (14)
         on left: 1 2
         on right: 0 2
-    stmt_list <pstmt> (15)
+    expr_list <exprs> (15)
         on left: 3 4 5 6
         on right: 1 2 4 6
     expr <fval> (16)
-        on left: 7 8 9 10 11 12 13
-        on right: 3 4 9 10 11 12 13
+        on left: 7 8 9 10 11 12 13 14
+        on right: 3 4 9 10 11 12 13 14
 
 
 State 0
@@ -57,18 +58,19 @@ State 0
     error    shift, and go to state 1
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
-    program    go to state 5
-    stmt_list  go to state 6
-    expr       go to state 7
+    program    go to state 6
+    expr_list  go to state 7
+    expr       go to state 8
 
 
 State 1
 
-    5 stmt_list: error . ';'
+    5 expr_list: error . ';'
 
-    ';'  shift, and go to state 8
+    ';'  shift, and go to state 9
 
 
 State 2
@@ -87,257 +89,291 @@ State 3
 
 State 4
 
-   13 expr: '(' . expr ')'
+    9 expr: '-' . expr
 
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
-    expr  go to state 9
+    expr  go to state 10
 
 
 State 5
 
-    0 $accept: program . $end
-    2 program: program . stmt_list '\n'
+   14 expr: '(' . expr ')'
 
-    $end     shift, and go to state 10
-    error    shift, and go to state 1
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
-    stmt_list  go to state 11
-    expr       go to state 7
+    expr  go to state 11
 
 
 State 6
 
-    1 program: stmt_list . '\n'
-    4 stmt_list: stmt_list . expr ';'
-    6          | stmt_list . error ';'
+    0 $accept: program . $end
+    2 program: program . expr_list '\n'
 
-    error    shift, and go to state 12
+    $end     shift, and go to state 12
+    error    shift, and go to state 1
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '\n'     shift, and go to state 13
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
-    expr  go to state 14
+    expr_list  go to state 13
+    expr       go to state 8
 
 
 State 7
 
-    3 stmt_list: expr . ';'
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   12     | expr . '/' expr
+    1 program: expr_list . '\n'
+    4 expr_list: expr_list . expr ';'
+    6          | expr_list . error ';'
 
-    '-'  shift, and go to state 15
-    '+'  shift, and go to state 16
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-    ';'  shift, and go to state 19
+    error    shift, and go to state 14
+    INTEGER  shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    '-'      shift, and go to state 4
+    '\n'     shift, and go to state 15
+    '('      shift, and go to state 5
+
+    expr  go to state 16
 
 
 State 8
 
-    5 stmt_list: error ';' .
+    3 expr_list: expr . ';'
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
 
-    $default  reduce using rule 5 (stmt_list)
+    '-'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ';'  shift, and go to state 21
 
 
 State 9
 
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   12     | expr . '/' expr
-   13     | '(' expr . ')'
+    5 expr_list: error ';' .
 
-    '-'  shift, and go to state 15
-    '+'  shift, and go to state 16
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-    ')'  shift, and go to state 20
+    $default  reduce using rule 5 (expr_list)
 
 
 State 10
+
+    9 expr: '-' expr .
+   10     | expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 9 (expr)
+
+
+State 11
+
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+   14     | '(' expr . ')'
+
+    '-'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ')'  shift, and go to state 22
+
+
+State 12
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 11
-
-    2 program: program stmt_list . '\n'
-    4 stmt_list: stmt_list . expr ';'
-    6          | stmt_list . error ';'
-
-    error    shift, and go to state 12
-    INTEGER  shift, and go to state 2
-    FLOAT    shift, and go to state 3
-    '\n'     shift, and go to state 21
-    '('      shift, and go to state 4
-
-    expr  go to state 14
-
-
-State 12
-
-    6 stmt_list: stmt_list error . ';'
-
-    ';'  shift, and go to state 22
-
-
 State 13
 
-    1 program: stmt_list '\n' .
+    2 program: program expr_list . '\n'
+    4 expr_list: expr_list . expr ';'
+    6          | expr_list . error ';'
 
-    $default  reduce using rule 1 (program)
+    error    shift, and go to state 14
+    INTEGER  shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    '-'      shift, and go to state 4
+    '\n'     shift, and go to state 23
+    '('      shift, and go to state 5
+
+    expr  go to state 16
 
 
 State 14
 
-    4 stmt_list: stmt_list expr . ';'
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   12     | expr . '/' expr
+    6 expr_list: expr_list error . ';'
 
-    '-'  shift, and go to state 15
-    '+'  shift, and go to state 16
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-    ';'  shift, and go to state 23
+    ';'  shift, and go to state 24
 
 
 State 15
 
-    9 expr: expr '-' . expr
+    1 program: expr_list '\n' .
 
-    INTEGER  shift, and go to state 2
-    FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
-
-    expr  go to state 24
+    $default  reduce using rule 1 (program)
 
 
 State 16
 
-   10 expr: expr '+' . expr
+    4 expr_list: expr_list expr . ';'
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
 
-    INTEGER  shift, and go to state 2
-    FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
-
-    expr  go to state 25
+    '-'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ';'  shift, and go to state 25
 
 
 State 17
 
-   11 expr: expr '*' . expr
+   10 expr: expr '-' . expr
 
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
     expr  go to state 26
 
 
 State 18
 
-   12 expr: expr '/' . expr
+   11 expr: expr '+' . expr
 
     INTEGER  shift, and go to state 2
     FLOAT    shift, and go to state 3
-    '('      shift, and go to state 4
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
 
     expr  go to state 27
 
 
 State 19
 
-    3 stmt_list: expr ';' .
+   12 expr: expr '*' . expr
 
-    $default  reduce using rule 3 (stmt_list)
+    INTEGER  shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
+
+    expr  go to state 28
 
 
 State 20
 
-   13 expr: '(' expr ')' .
+   13 expr: expr '/' . expr
 
-    $default  reduce using rule 13 (expr)
+    INTEGER  shift, and go to state 2
+    FLOAT    shift, and go to state 3
+    '-'      shift, and go to state 4
+    '('      shift, and go to state 5
+
+    expr  go to state 29
 
 
 State 21
 
-    2 program: program stmt_list '\n' .
+    3 expr_list: expr ';' .
 
-    $default  reduce using rule 2 (program)
+    $default  reduce using rule 3 (expr_list)
 
 
 State 22
 
-    6 stmt_list: stmt_list error ';' .
+   14 expr: '(' expr ')' .
 
-    $default  reduce using rule 6 (stmt_list)
+    $default  reduce using rule 14 (expr)
 
 
 State 23
 
-    4 stmt_list: stmt_list expr ';' .
+    2 program: program expr_list '\n' .
 
-    $default  reduce using rule 4 (stmt_list)
+    $default  reduce using rule 2 (program)
 
 
 State 24
 
-    9 expr: expr . '-' expr
-    9     | expr '-' expr .
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   12     | expr . '/' expr
+    6 expr_list: expr_list error ';' .
 
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-
-    $default  reduce using rule 9 (expr)
+    $default  reduce using rule 6 (expr_list)
 
 
 State 25
 
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   10     | expr '+' expr .
-   11     | expr . '*' expr
-   12     | expr . '/' expr
+    4 expr_list: expr_list expr ';' .
 
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-
-    $default  reduce using rule 10 (expr)
+    $default  reduce using rule 4 (expr_list)
 
 
 State 26
 
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   11     | expr '*' expr .
-   12     | expr . '/' expr
+   10 expr: expr . '-' expr
+   10     | expr '-' expr .
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
 
-    $default  reduce using rule 11 (expr)
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 10 (expr)
 
 
 State 27
 
-    9 expr: expr . '-' expr
-   10     | expr . '+' expr
-   11     | expr . '*' expr
-   12     | expr . '/' expr
-   12     | expr '/' expr .
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   11     | expr '+' expr .
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 11 (expr)
+
+
+State 28
+
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   12     | expr '*' expr .
+   13     | expr . '/' expr
 
     $default  reduce using rule 12 (expr)
+
+
+State 29
+
+   10 expr: expr . '-' expr
+   11     | expr . '+' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+   13     | expr '/' expr .
+
+    $default  reduce using rule 13 (expr)

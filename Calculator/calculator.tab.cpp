@@ -67,19 +67,20 @@
 
 
 /* First part of user prologue.  */
-#line 8 "calculator.y"
+#line 1 "calculator.y"
 
 #include <stdlib.h>
 #include <stdio.h>
-//#include <stdint.h>
-//#include <vector>
-extern "C" int yylex();
+extern "C" {
+	#include "expr_list.h"
+	int yylex();
+}
 void yyerror(const char*);
 extern int yy_flex_debug;
 float *stmts;
-void print(float *start, float *end);
+void print(ExprList* exprs);
 
-#line 83 "calculator.tab.cpp"
+#line 84 "calculator.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -122,7 +123,7 @@ enum yysymbol_kind_t
   YYSYMBOL_12_ = 12,                       /* ')'  */
   YYSYMBOL_YYACCEPT = 13,                  /* $accept  */
   YYSYMBOL_program = 14,                   /* program  */
-  YYSYMBOL_stmt_list = 15,                 /* stmt_list  */
+  YYSYMBOL_expr_list = 15,                 /* expr_list  */
   YYSYMBOL_expr = 16                       /* expr  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
@@ -431,18 +432,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  10
+#define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   60
+#define YYLAST   68
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  13
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  14
+#define YYNRULES  15
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  28
+#define YYNSTATES  30
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   259
@@ -491,8 +492,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    42,    42,    50,    61,    74,    82,    87,    96,    97,
-      98,    99,   100,   101,   102
+       0,    34,    34,    39,    47,    52,    57,    61,    65,    66,
+      67,    68,    69,    70,    71,    72
 };
 #endif
 
@@ -510,7 +511,7 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "INTEGER", "FLOAT",
   "'-'", "'+'", "'*'", "'/'", "'\\n'", "';'", "'('", "')'", "$accept",
-  "program", "stmt_list", "expr", YY_NULLPTR
+  "program", "expr_list", "expr", YY_NULLPTR
 };
 
 static const char *
@@ -530,7 +531,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-10)
+#define YYPACT_NINF (-9)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -544,9 +545,9 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      27,    -9,   -10,   -10,    29,     5,    14,    44,   -10,    36,
-     -10,    18,    -7,   -10,    50,    29,    29,    29,    29,   -10,
-     -10,   -10,   -10,   -10,    28,    28,   -10,   -10
+      34,    -8,    -9,    -9,    37,    37,     7,    16,    52,    -9,
+      -3,    44,    -9,    25,    12,    -9,    58,    37,    37,    37,
+      37,    -9,    -9,    -9,    -9,    -9,    -3,    -3,    -9,    -9
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -554,21 +555,21 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     8,     9,     0,     0,     0,     0,     6,     0,
-       1,     0,     0,     2,     0,     0,     0,     0,     0,     4,
-      14,     3,     7,     5,    10,    11,    12,    13
+       0,     0,     8,     9,     0,     0,     0,     0,     0,     6,
+      10,     0,     1,     0,     0,     2,     0,     0,     0,     0,
+       0,     4,    15,     3,     7,     5,    11,    12,    13,    14
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -10,   -10,    -1,    -4
+      -9,    -9,     0,    -4
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     5,     6,     7
+      -1,     6,     7,     8
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -576,47 +577,47 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       9,     8,    14,    22,    11,    10,     1,    14,     2,     3,
-       0,    24,    25,    26,    27,    12,     4,     2,     3,    12,
-       0,     2,     3,    13,     0,     4,     0,    21,     1,     4,
-       2,     3,     2,     3,     0,    17,    18,     0,     4,     0,
-       4,    15,    16,    17,    18,     0,     0,     0,    20,    15,
-      16,    17,    18,     0,    19,    15,    16,    17,    18,     0,
-      23
+      10,    11,     9,    16,    19,    20,    13,    12,     1,    16,
+       2,     3,     4,    26,    27,    28,    29,    14,     5,     2,
+       3,     4,    24,     0,     0,    15,    14,     5,     2,     3,
+       4,     0,     0,     0,    23,     1,     5,     2,     3,     4,
+       2,     3,     4,     0,     0,     5,     0,     0,     5,    17,
+      18,    19,    20,     0,     0,     0,    22,    17,    18,    19,
+      20,     0,    21,    17,    18,    19,    20,     0,    25
 };
 
 static const yytype_int8 yycheck[] =
 {
-       4,    10,     6,    10,     5,     0,     1,    11,     3,     4,
-      -1,    15,    16,    17,    18,     1,    11,     3,     4,     1,
-      -1,     3,     4,     9,    -1,    11,    -1,     9,     1,    11,
-       3,     4,     3,     4,    -1,     7,     8,    -1,    11,    -1,
-      11,     5,     6,     7,     8,    -1,    -1,    -1,    12,     5,
-       6,     7,     8,    -1,    10,     5,     6,     7,     8,    -1,
-      10
+       4,     5,    10,     7,     7,     8,     6,     0,     1,    13,
+       3,     4,     5,    17,    18,    19,    20,     1,    11,     3,
+       4,     5,    10,    -1,    -1,     9,     1,    11,     3,     4,
+       5,    -1,    -1,    -1,     9,     1,    11,     3,     4,     5,
+       3,     4,     5,    -1,    -1,    11,    -1,    -1,    11,     5,
+       6,     7,     8,    -1,    -1,    -1,    12,     5,     6,     7,
+       8,    -1,    10,     5,     6,     7,     8,    -1,    10
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     1,     3,     4,    11,    14,    15,    16,    10,    16,
-       0,    15,     1,     9,    16,     5,     6,     7,     8,    10,
-      12,     9,    10,    10,    16,    16,    16,    16
+       0,     1,     3,     4,     5,    11,    14,    15,    16,    10,
+      16,    16,     0,    15,     1,     9,    16,     5,     6,     7,
+       8,    10,    12,     9,    10,    10,    16,    16,    16,    16
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
        0,    13,    14,    14,    15,    15,    15,    15,    16,    16,
-      16,    16,    16,    16,    16
+      16,    16,    16,    16,    16,    16
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     2,     3,     2,     3,     2,     3,     1,     1,
-       3,     3,     3,     3,     3
+       2,     3,     3,     3,     3,     3
 };
 
 
@@ -1083,123 +1084,106 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* program: stmt_list '\n'  */
-#line 42 "calculator.y"
-                                                        {
-										print(stmts, (yyvsp[-1].pstmt));
-										free(stmts);
-										stmts = NULL;
-										/*for (std::vector<float>::iterator it = $1.begin; it != $1.end(); ++it){
-											printf("Result: %g\n", *p);
-										}*/
-									}
-#line 1097 "calculator.tab.cpp"
+  case 2: /* program: expr_list '\n'  */
+#line 35 "calculator.y"
+                {
+			print((yyvsp[-1].exprs));
+			expr_list_free((yyvsp[-1].exprs));
+		}
+#line 1094 "calculator.tab.cpp"
     break;
 
-  case 3: /* program: program stmt_list '\n'  */
-#line 50 "calculator.y"
-                                                        {
-										print(stmts, (yyvsp[-1].pstmt));
-										free(stmts);
-										stmts = NULL;
-										/*for (std::vector<float>::iterator it = $2.begin; it != $2.end(); ++it) {
-											printf("Result: %g\n", *p);
-										}*/
-									}
-#line 1110 "calculator.tab.cpp"
+  case 3: /* program: program expr_list '\n'  */
+#line 40 "calculator.y"
+                {
+			print((yyvsp[-1].exprs));
+			expr_list_free((yyvsp[-1].exprs));
+		}
+#line 1103 "calculator.tab.cpp"
     break;
 
-  case 4: /* stmt_list: expr ';'  */
+  case 4: /* expr_list: expr ';'  */
+#line 48 "calculator.y"
+                {
+			(yyval.exprs) = expr_list_create(1);
+			expr_list_push((yyval.exprs), (yyvsp[-1].fval));
+		}
+#line 1112 "calculator.tab.cpp"
+    break;
+
+  case 5: /* expr_list: expr_list expr ';'  */
+#line 53 "calculator.y"
+                {
+			(yyval.exprs) = (yyvsp[-2].exprs);
+			expr_list_push((yyvsp[-2].exprs), (yyvsp[-1].fval));
+		}
+#line 1121 "calculator.tab.cpp"
+    break;
+
+  case 6: /* expr_list: error ';'  */
+#line 58 "calculator.y"
+                {
+			(yyval.exprs) = expr_list_create(1);
+		}
+#line 1129 "calculator.tab.cpp"
+    break;
+
+  case 7: /* expr_list: expr_list error ';'  */
 #line 61 "calculator.y"
-                                                                {
-										// Allocate memory for statement array
-										stmts = (float*)malloc(24 * sizeof(float));
-										// Assign pointer for array
-										(yyval.pstmt) = stmts;
-										// At pointer, assign statement value
-										*(yyval.pstmt) = (yyvsp[-1].fval); 
-										// Increment pointer (for next job)
-										(yyval.pstmt)++;
-
-										//$$ = {$1};
-
-									}
-#line 1128 "calculator.tab.cpp"
-    break;
-
-  case 5: /* stmt_list: stmt_list expr ';'  */
-#line 74 "calculator.y"
-                                                {
-										
-										(yyval.pstmt) = (yyvsp[-2].pstmt);
-										*(yyval.pstmt) = (yyvsp[-1].fval);
-										(yyval.pstmt)++;
-										/*$$ = $1;
-										$$.push_back($2);*/
-									}
-#line 1141 "calculator.tab.cpp"
-    break;
-
-  case 6: /* stmt_list: error ';'  */
-#line 82 "calculator.y"
-                                                                {
-										stmts = (float*) malloc(24 * sizeof(float));
-										(yyval.pstmt) = stmts;
-										//$$ = {};
-									}
-#line 1151 "calculator.tab.cpp"
-    break;
-
-  case 7: /* stmt_list: stmt_list error ';'  */
-#line 87 "calculator.y"
-                                                { (yyval.pstmt) = (yyvsp[-2].pstmt); }
-#line 1157 "calculator.tab.cpp"
+                                { (yyval.exprs) = (yyvsp[-2].exprs); }
+#line 1135 "calculator.tab.cpp"
     break;
 
   case 8: /* expr: INTEGER  */
-#line 96 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[0].ival); }
-#line 1163 "calculator.tab.cpp"
+#line 65 "calculator.y"
+                                { (yyval.fval) = (yyvsp[0].ival); }
+#line 1141 "calculator.tab.cpp"
     break;
 
   case 9: /* expr: FLOAT  */
-#line 97 "calculator.y"
-                                                { (yyval.fval) = (yyvsp[0].fval); }
-#line 1169 "calculator.tab.cpp"
+#line 66 "calculator.y"
+                                { (yyval.fval) = (yyvsp[0].fval); }
+#line 1147 "calculator.tab.cpp"
     break;
 
-  case 10: /* expr: expr '-' expr  */
-#line 98 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[-2].fval) - (yyvsp[0].fval); }
-#line 1175 "calculator.tab.cpp"
+  case 10: /* expr: '-' expr  */
+#line 67 "calculator.y"
+                                { (yyval.fval) = 0 - (yyvsp[0].fval); }
+#line 1153 "calculator.tab.cpp"
     break;
 
-  case 11: /* expr: expr '+' expr  */
-#line 99 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[-2].fval) + (yyvsp[0].fval); }
-#line 1181 "calculator.tab.cpp"
+  case 11: /* expr: expr '-' expr  */
+#line 68 "calculator.y"
+                        { (yyval.fval) = (yyvsp[-2].fval) - (yyvsp[0].fval); }
+#line 1159 "calculator.tab.cpp"
     break;
 
-  case 12: /* expr: expr '*' expr  */
-#line 100 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[-2].fval) * (yyvsp[0].fval); }
+  case 12: /* expr: expr '+' expr  */
+#line 69 "calculator.y"
+                        { (yyval.fval) = (yyvsp[-2].fval) + (yyvsp[0].fval); }
+#line 1165 "calculator.tab.cpp"
+    break;
+
+  case 13: /* expr: expr '*' expr  */
+#line 70 "calculator.y"
+                        { (yyval.fval) = (yyvsp[-2].fval) * (yyvsp[0].fval); }
+#line 1171 "calculator.tab.cpp"
+    break;
+
+  case 14: /* expr: expr '/' expr  */
+#line 71 "calculator.y"
+                        { (yyval.fval) = (yyvsp[-2].fval) / (yyvsp[0].fval); }
+#line 1177 "calculator.tab.cpp"
+    break;
+
+  case 15: /* expr: '(' expr ')'  */
+#line 72 "calculator.y"
+                        { (yyval.fval) = (yyvsp[-1].fval); }
+#line 1183 "calculator.tab.cpp"
+    break;
+
+
 #line 1187 "calculator.tab.cpp"
-    break;
-
-  case 13: /* expr: expr '/' expr  */
-#line 101 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[-2].fval) / (yyvsp[0].fval); }
-#line 1193 "calculator.tab.cpp"
-    break;
-
-  case 14: /* expr: '(' expr ')'  */
-#line 102 "calculator.y"
-                                        { (yyval.fval) = (yyvsp[-1].fval); }
-#line 1199 "calculator.tab.cpp"
-    break;
-
-
-#line 1203 "calculator.tab.cpp"
 
       default: break;
     }
@@ -1393,15 +1377,15 @@ yyreturn:
   return yyresult;
 }
 
-#line 105 "calculator.y"
+#line 75 "calculator.y"
 
 
 void yyerror(const char* msg){
 	fprintf(stderr, "ERROR: %s\n", msg);
 }
 
-void print(float *start, float *end){
-	for (float* p = start; p < end; p++) {
+void print(ExprList* exprs){
+	for (float* p = exprs->data; p < exprs->data + expr_list_length(exprs); p++) {
 		printf("Result: %g\n", *p);
 	}
 }

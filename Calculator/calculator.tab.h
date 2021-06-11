@@ -64,14 +64,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "calculator.y"
+#line 15 "calculator.y"
 
 	int ival;
 	float fval;
-	float *pstmt;
-	bool ignore;
+	ExprList *exprs;
 
-#line 75 "calculator.tab.h"
+#line 74 "calculator.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -518,7 +518,7 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[6] =
     {   0,
-       16,   20,   24,   27,   28
+       15,   19,   23,   26,   27
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -532,13 +532,12 @@ char *yytext;
 #line 1 "calculator.l"
 #line 4 "calculator.l"
 #include <stdlib.h>
-//#include <stdint.h>
-//#include "FlexLexer.h"
+#include "expr_list.h"
 #include "calculator.tab.h"
 #define YY_DECL extern "C" int yylex()
 void yyerror(const char*);
+#line 539 "calculator.flex.cpp"
 #line 540 "calculator.flex.cpp"
-#line 541 "calculator.flex.cpp"
 
 #define INITIAL 0
 
@@ -811,10 +810,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 14 "calculator.l"
+#line 13 "calculator.l"
 
 
-#line 817 "calculator.flex.cpp"
+#line 816 "calculator.flex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -896,7 +895,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "calculator.l"
+#line 15 "calculator.l"
 { 
 							yylval.ival = atoi(yytext);
 							return INTEGER;
@@ -904,7 +903,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "calculator.l"
+#line 19 "calculator.l"
 {
 							yylval.fval = atof(yytext);
 							return FLOAT;
@@ -913,19 +912,19 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 24 "calculator.l"
+#line 23 "calculator.l"
 {
 							return *yytext;
 						}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "calculator.l"
+#line 26 "calculator.l"
 ;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 28 "calculator.l"
+#line 27 "calculator.l"
 {
 							/* Change to return *yytext - allows parser to handle syntax error and attempt recovery */
 							yyerror("Unrecognised character.");
@@ -933,10 +932,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 33 "calculator.l"
+#line 32 "calculator.l"
 ECHO;
 	YY_BREAK
-#line 939 "calculator.flex.cpp"
+#line 938 "calculator.flex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2085,6 +2084,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 33 "calculator.l"
+#line 32 "calculator.l"
 
 

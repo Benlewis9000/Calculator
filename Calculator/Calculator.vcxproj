@@ -173,7 +173,6 @@
   <ItemGroup>
     <ClInclude Include="calculator.tab.h" />
     <ClInclude Include="expr_list.h" />
-    <ClInclude Include="FlexLexer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="calculator.flex.cpp" />
